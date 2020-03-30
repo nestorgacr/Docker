@@ -1,0 +1,27 @@
+FROM centos:7
+RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+RUN yum -y install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+RUN yum -y update
+RUN yum-config-manager --enable remi-php73
+RUN \
+    yum -y install httpd \
+                   php73 \
+				   php73-pdo \
+				   php73-opcache \
+				   php73-xml \
+				   php73-gd \
+				   php73-devel \
+				   php73-intl \
+				   php73-mbstring \
+				   php73-json \
+				   php73-iconv \
+				   php73-mysqlnd \
+				   php73-fpm \
+				   php73-bcmath \
+				   php73-soap \
+				   unzip
+					
+CMD apachectl -DFOREGROUND
+
+
+
