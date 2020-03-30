@@ -1,27 +1,42 @@
-FROM centos:7
-RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-RUN yum -y install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-RUN yum -y update
-RUN yum-config-manager --enable remi-php73
-RUN \
-    yum -y install httpd \
-                   php73 \
-				   php73-pdo \
-				   php73-opcache \
-				   php73-xml \
-				   php73-gd \
-				   php73-devel \
-				   php73-intl \
-				   php73-mbstring \
-				   php73-json \
-				   php73-iconv \
-				   php73-mysqlnd \
-				   php73-fpm \
-				   php73-bcmath \
-				   php73-soap \
-				   unzip
-					
-CMD apachectl -DFOREGROUND
+FROM ubuntu
+
+RUN apt-get  update
+RUN apt-get -y upgrade
+
+RUN apt-get install software-properties-common
+RUN apt-add-repository ppa:ondrej/php
+
+RUN apt-get install -y apache2 \
+					php7.1 \
+					php7.1-cli \
+					php7.1-common  \
+					php7.1-json  \
+					php7.1-opcache \ 
+					php7.1-mysql \ 
+					php7.1-mbstring  \
+					php7.1-mcrypt \ 
+					php7.1-zip  \
+					php7.1-fpm \ 
+					php7.1-soap \ 
+					php7.1-intl \ 
+					php7.1-xml \ 
+					php7.1-curl \ 
+					php7.1-zip 
+
+RUN a2enmod 
+RUN a2enmod rewrite
+
+ENV APACHE_RUN_USER www-data
+ENV APACHE_RUN_GROUP www-data
+ENV APACHE_LOG_DIR /var/log/apache2
+ENV APACHE_LOCK_DIR /var/lock/apache2
+ENV APACHE_PID_FILE /var/run/apache2.pid
 
 
+EXPOSE 80
 
+ADD magento /var/www/site/app
+
+ADD apache-config.conf /etc/apache2/sites-enabled/000-default.conf
+
+CMD /usr/sbin/apache2ctl -D FOREGROUND
