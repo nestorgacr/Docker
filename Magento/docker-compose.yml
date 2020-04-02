@@ -1,7 +1,7 @@
 version: '3'
 services:
     web:
-        image: php:7.2-apache
+        image: magento2
         container_name: web
         restart: always
         volumes:
@@ -12,7 +12,7 @@ services:
         links:
           - mysql
     mysql:
-        image: mariadb:10
+        image: mysql:5.6
         container_name: mysql
         restart: always
         ports:
@@ -20,8 +20,11 @@ services:
         environment:
           - MYSQL_ROOT_PASSWORD=root
           - MYSQL_DATABASE=magento
+          - MYSQL_USER=masteradmin
+          - MYSQL_PASSWORD=B5x26z4p=
         volumes:
           - db-data:/var/lib/mysql
+        command: --innodb-use-native-aio=0
 
 volumes:
     db-data:

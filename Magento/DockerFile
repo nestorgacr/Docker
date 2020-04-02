@@ -1,11 +1,13 @@
 FROM ubuntu:18.04
 
-RUN apt-get  update
+ENV DEBIAN_FRONTEND=noninteractive
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install software-properties-common
-RUN DEBIAN_FRONTEND=noninteractive apt-add-repository ppa:ondrej/php
+RUN apt  update
 
-RUN apt-get install -y apache2 \
+RUN apt install -y software-properties-common
+RUN apt-add-repository ppa:ondrej/php
+
+RUN apt install -y apache2 \
 					php7.1 \
 					php7.1-cli \
 					php7.1-common  \
@@ -20,9 +22,12 @@ RUN apt-get install -y apache2 \
 					php7.1-intl \ 
 					php7.1-xml \ 
 					php7.1-curl \ 
-					php7.1-zip 
+					php7.1-zip \
+					libapache2-mod-php7.1 \
+					php7.1-bcmath \
+					php7.1-gd
 
-RUN a2enmod 
+RUN a2enmod php7.1
 RUN a2enmod rewrite
 
 ENV APACHE_RUN_USER www-data
@@ -33,8 +38,6 @@ ENV APACHE_PID_FILE /var/run/apache2.pid
 
 
 EXPOSE 80
-
-ADD magento /var/www/site/app
 
 ADD apache-config.conf /etc/apache2/sites-enabled/000-default.conf
 
